@@ -23,6 +23,8 @@ import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
 import com.amazonaws.services.simpleemail.model.RawMessage;
 import com.amazonaws.services.simpleemail.model.SendRawEmailRequest;
 
+import org.checkerframework.checker.nullness.qual.*;
+
 public class AmazonSESMailer implements Mailer {
 	private final Environment env;
 	private final Session session;
@@ -32,13 +34,13 @@ public class AmazonSESMailer implements Mailer {
 		this.env = env;
 		InputStream resource = AmazonSESMailer.class
 				.getResourceAsStream("/AwsCredentials.properties");
-		PropertiesCredentials credentials = new PropertiesCredentials(resource);
-		this.client = new AmazonSimpleEmailServiceClient(credentials);
-		Properties props = new Properties();
-		props.setProperty("mail.transport.protocol", "aws");
-		props.setProperty("mail.aws.user", credentials.getAWSAccessKeyId());
-		props.setProperty("mail.aws.password", credentials.getAWSSecretKey());
-		this.session = Session.getInstance(props);
+			PropertiesCredentials credentials = new PropertiesCredentials(resource);
+			this.client = new AmazonSimpleEmailServiceClient(credentials);
+			Properties props = new Properties();
+			props.setProperty("mail.transport.protocol", "aws");
+			props.setProperty("mail.aws.user", credentials.getAWSAccessKeyId());
+			props.setProperty("mail.aws.password", credentials.getAWSSecretKey());
+			this.session = Session.getInstance(props);
 	}
 
 	private final static Logger logger = LoggerFactory

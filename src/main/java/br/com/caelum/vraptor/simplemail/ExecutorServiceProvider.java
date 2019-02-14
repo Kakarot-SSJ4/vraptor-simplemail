@@ -10,11 +10,13 @@ import br.com.caelum.vraptor.ioc.ApplicationScoped;
 import br.com.caelum.vraptor.ioc.Component;
 import br.com.caelum.vraptor.ioc.ComponentFactory;
 
+import org.checkerframework.checker.nullness.qual.*;
+
 @Component
 @ApplicationScoped
 public class ExecutorServiceProvider implements ComponentFactory<ExecutorService> {
 
-	private ExecutorService pool;
+	private @Nullable ExecutorService pool;
 
 	@PostConstruct
 	public void initialize() {

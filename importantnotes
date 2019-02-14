@@ -1,0 +1,26 @@
+To solve this error:
+[ERROR] /home/kakarot/try/vraptor-simplemail/src/main/java/br/com/caelum/vraptor/simplemail/DefaultAsyncMailer.java:[84,77] [argument.type.incompatible] incompatible types in argument.
+[ERROR]   found   : @Initialized @Nullable Email
+[ERROR]   required: @Initialized @NonNull Email
+
+If I write-
+if(this.mailQueue.poll()!=null)
+	{
+	Email nextMail = this.mailQueue.poll();
+	Future<Void> sendingResult = this.asyncSend(nextMail);
+	deliveries.put(nextMail, sendingResult);
+	}
+
+It still returns the following error:
+[ERROR] /home/kakarot/try/vraptor-simplemail/src/main/java/br/com/caelum/vraptor/simplemail/DefaultAsyncMailer.java:[85,53] [argument.type.incompatible] incompatible types in argument.
+[ERROR]   found   : @Initialized @Nullable Email
+[ERROR]   required: @Initialized @NonNull Email
+
+But if I write - 
+Email nextMail = this.mailQueue.poll();
+			if(nextMail!=null)
+			{
+				Future<Void> sendingResult = this.asyncSend(nextMail);
+				deliveries.put(nextMail, sendingResult);
+			}
+The error gets solved

@@ -10,12 +10,14 @@ import br.com.caelum.vraptor.freemarker.Freemarker;
 import br.com.caelum.vraptor.ioc.Component;
 import freemarker.template.Configuration;
 
+import org.checkerframework.checker.nullness.qual.*;
+
 @Component
 public class DefaultTemplateMailer implements TemplateMailer {
 
 	private final Freemarker freemarker;
 	private final Localization localization;
-	private Configuration configuration;
+	@Nullable private Configuration configuration;
 	private final ServletContext context;
 	private final Environment env;
 
