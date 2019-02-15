@@ -28,19 +28,24 @@ import org.checkerframework.checker.nullness.qual.*;
 public class AmazonSESMailer implements Mailer {
 	private final Environment env;
 	private final Session session;
-	private final AmazonSimpleEmailServiceClient client;
+	private final @Nullable AmazonSimpleEmailServiceClient client;
 
 	public AmazonSESMailer(Environment env) throws IOException {
 		this.env = env;
 		InputStream resource = AmazonSESMailer.class
 				.getResourceAsStream("/AwsCredentials.properties");
+		Properties props = new Properties();
+		props.setProperty("mail.transport.protocol", "aws");
+		if(resource!=null)
+			{
 			PropertiesCredentials credentials = new PropertiesCredentials(resource);
 			this.client = new AmazonSimpleEmailServiceClient(credentials);
-			Properties props = new Properties();
-			props.setProperty("mail.transport.protocol", "aws");
 			props.setProperty("mail.aws.user", credentials.getAWSAccessKeyId());
 			props.setProperty("mail.aws.password", credentials.getAWSSecretKey());
-			this.session = Session.getInstance(props);
+			}
+		else
+			this.client = null;
+		this.session = Session.getInstance(props);
 	}
 
 	private final static Logger logger = LoggerFactory
@@ -76,12 +81,14 @@ public class AmazonSESMailer implements Mailer {
 			 };
 
 			email.setMailSession(session);
-
-			try {
-				client.sendRawEmail(new SendRawEmailRequest()
-						.withRawMessage(mail2Content(email)));
-			} catch (Exception e) {
-				throw new EmailException(e);
+			if(this.client!=null)
+			{
+				try {
+					client.sendRawEmail(new SendRawEmailRequest()
+							.withRawMessage(mail2Content(email)));
+				} catch (Exception e) {
+					throw new EmailException(e);
+				}
 			}
 		} else {
 			new MockMailer().send(email);

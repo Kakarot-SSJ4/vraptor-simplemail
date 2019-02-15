@@ -29,17 +29,22 @@ import org.mockito.stubbing.Answer;
 
 import br.com.caelum.vraptor.environment.Environment;
 
+import org.checkerframework.checker.nullness.qual.*;
+
 @RunWith(MockitoJUnitRunner.class)
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class DefaultAsyncMailerTest {
 	@Mock
+	@SuppressWarnings("initialization")
 	private ExecutorService mockExecutor;
 	@Mock
+	@SuppressWarnings("initialization")
 	private Mailer mockMailer;
+	@SuppressWarnings("initialization")
 	private AsyncMailer mailer;
 	
 	@Mock
-	private Environment env;
+	private @Nullable Environment env;
 
 	@Before
 	public void setUp() throws Exception {

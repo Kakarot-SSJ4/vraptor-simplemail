@@ -32,8 +32,7 @@ public class DefaultTemplateMailer implements TemplateMailer {
 	public TemplateMail template(String name, Object... nameParameters) {
 		String appPath = env.get("host") + context.getContextPath();
 		try {
-			boolean shouldUseCustomConfiguration = configuration != null;
-			if(shouldUseCustomConfiguration)
+			if(configuration!=null)
 				return new DefaultTemplateMail(name, freemarker, localization, appPath, configuration, nameParameters);
 			
 			return new DefaultTemplateMail(name, freemarker, localization, appPath, nameParameters);

@@ -24,3 +24,26 @@ Email nextMail = this.mailQueue.poll();
 				deliveries.put(nextMail, sendingResult);
 			}
 The error gets solved
+
+-----------------------------------------------------------------------------
+
+In DefaultTemplateMailer.java, 
+
+boolean shouldUseCustomConfiguration = configuration != null;
+			if(shouldUseCustomConfiguration)
+
+The above code already checks if configuration is null and act accordingly, but the checker is unable to detect it.
+On the other hand, if I replace it with the following:
+if(configuration!=null)
+The checker detects that code is not faulty.
+
+---------------------------------------------------------------------------
+
+In MailerFactoryTest.java, all blocks of code similar to the following has already checked for nullness of env:
+if(env!=null)
+		{
+			when(env.getName()).thenReturn("production");
+			when(env.has(MailerFactory.MAILER_IMPLEMENTATION)).thenReturn(true);
+			when(env.get(MailerFactory.MAILER_IMPLEMENTATION)).thenReturn(MyMailer.class.getName());
+		}
+Hence there shouldn't be a possible null dereference for env which the checker suggests when we run mvn install.

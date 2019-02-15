@@ -16,57 +16,79 @@ import org.mockito.runners.MockitoJUnitRunner;
 import br.com.caelum.vraptor.environment.Environment;
 import br.com.caelum.vraptor.simplemail.aws.MockMailer;
 
+import org.checkerframework.checker.nullness.qual.*;
+
 @RunWith(MockitoJUnitRunner.class)
 public class MailerFactoryTest {
 	@Mock
-	private Environment env;
+	private @Nullable Environment env;
 
-	private MailerFactory factory;
+	private @Nullable MailerFactory factory;
 
 	@Before
 	public void setUp() throws Exception {
-		factory = new MailerFactory(env);
+		if(env!=null)
+			factory = new MailerFactory(env);
 	}
 
 	@Test
 	public void should_create_a_mock_mailer_if_in_development() throws Exception {
-		when(env.getName()).thenReturn("development");
-		assertThat(factory.getInstance(), instanceOf(MockMailer.class));
+		if(env!=null)
+			when(env.getName()).thenReturn("development");
+		if(factory!=null)
+			assertThat(factory.getInstance(), instanceOf(MockMailer.class));
 	}
 
 	@Test
+	@SuppressWarnings("null")
 	public void should_create_mailer_from_properties_if_specified_and_not_in_development() throws Exception {
-		when(env.getName()).thenReturn("production");
-		when(env.has(MailerFactory.MAILER_IMPLEMENTATION)).thenReturn(true);
-		when(env.get(MailerFactory.MAILER_IMPLEMENTATION)).thenReturn(MyMailer.class.getName());
-		assertThat(factory.getInstance(), instanceOf(MyMailer.class));
+		if(env!=null)
+		{
+			when(env.getName()).thenReturn("production");
+			when(env.has(MailerFactory.MAILER_IMPLEMENTATION)).thenReturn(true);
+			when(env.get(MailerFactory.MAILER_IMPLEMENTATION)).thenReturn(MyMailer.class.getName());
+		}
+		
+			assertThat(factory==null?null:factory.getInstance(), instanceOf(MyMailer.class));
 	}
 	@Test
+	@SuppressWarnings("null")
 	public void should_create_mailer_from_properties_if_specified_and_in_development() throws Exception {
-		when(env.getName()).thenReturn("development");
-		when(env.has(MailerFactory.MAILER_IMPLEMENTATION)).thenReturn(true);
-		when(env.get(MailerFactory.MAILER_IMPLEMENTATION)).thenReturn(MyMailer.class.getName());
-		assertThat(factory.getInstance(), instanceOf(MyMailer.class));
+		if (env!=null) 
+		{
+			when(env.getName()).thenReturn("development");
+			when(env.has(MailerFactory.MAILER_IMPLEMENTATION)).thenReturn(true);
+			when(env.get(MailerFactory.MAILER_IMPLEMENTATION)).thenReturn(MyMailer.class.getName());
+		}
+		assertThat(factory==null?null:factory.getInstance(), instanceOf(MyMailer.class));
 	}
 
 	@Test
+	@SuppressWarnings("null")
 	public void should_create_default_mailer_if_no_mailer_in_properties_and_not_in_development() throws Exception {
-		when(env.getName()).thenReturn("production");
-		when(env.has(MailerFactory.MAILER_IMPLEMENTATION)).thenReturn(false);
-		assertThat(factory.getInstance(), instanceOf(DefaultMailer.class));
+		if(env!=null)
+		{
+			when(env.getName()).thenReturn("production");
+			when(env.has(MailerFactory.MAILER_IMPLEMENTATION)).thenReturn(false);
+		}
+		assertThat(factory==null?null:factory.getInstance(), instanceOf(DefaultMailer.class));
 	}
 
 	@Test
+	@SuppressWarnings("null")
 	public void should_create_mailer_passing_environment_in_constructor_if_needed() throws Exception {
-		when(env.getName()).thenReturn("production");
-		when(env.has(MailerFactory.MAILER_IMPLEMENTATION)).thenReturn(true);
-		when(env.get(MailerFactory.MAILER_IMPLEMENTATION)).thenReturn(MyMailerWithEnv.class.getName());
-
-		Mailer secondMailer = factory.getInstance();
+		if(env!=null)
+		{
+			when(env.getName()).thenReturn("production");
+			when(env.has(MailerFactory.MAILER_IMPLEMENTATION)).thenReturn(true);
+			when(env.get(MailerFactory.MAILER_IMPLEMENTATION)).thenReturn(MyMailerWithEnv.class.getName());
+		}
+	
+		Mailer secondMailer = factory==null?null:factory.getInstance();
 		assertThat(secondMailer, instanceOf(MyMailerWithEnv.class));
 
 		MyMailerWithEnv mailerWithEnv = (MyMailerWithEnv) secondMailer;
-		assertThat(mailerWithEnv.getMyEnv(), equalTo(env));
+		assertThat(mailerWithEnv==null?null:mailerWithEnv.getMyEnv(), equalTo(env));
 	}
 
 	public static class MyMailer implements Mailer {
@@ -77,9 +99,9 @@ public class MailerFactoryTest {
 	}
 
 	public static class MyMailerWithEnv implements Mailer {
-		private final Environment myEnv;
+		private final @Nullable Environment myEnv;
 
-		public MyMailerWithEnv(Environment env) {
+		public MyMailerWithEnv(@Nullable Environment env) {
 			this.myEnv = env;
 		}
 
@@ -88,7 +110,7 @@ public class MailerFactoryTest {
 			// does nothing
 		}
 
-		public Environment getMyEnv() {
+	@Nullable public Environment getMyEnv() {
 			return this.myEnv;
 		}
 	}

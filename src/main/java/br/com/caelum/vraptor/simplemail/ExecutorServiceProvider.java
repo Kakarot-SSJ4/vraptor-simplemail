@@ -15,8 +15,8 @@ import org.checkerframework.checker.nullness.qual.*;
 @Component
 @ApplicationScoped
 public class ExecutorServiceProvider implements ComponentFactory<ExecutorService> {
-
-	private @Nullable ExecutorService pool;
+	@SuppressWarnings("initialization")
+	private ExecutorService pool;
 
 	@PostConstruct
 	public void initialize() {

@@ -25,15 +25,22 @@ import br.com.caelum.vraptor.resource.DefaultResourceClass;
 import br.com.caelum.vraptor.resource.DefaultResourceMethod;
 import br.com.caelum.vraptor.resource.ResourceMethod;
 
+import org.checkerframework.checker.nullness.qual.*;
+
 @RunWith(MockitoJUnitRunner.class)
 public class AsyncMailerFlushInterceptorTest {
 	@Mock
+	@SuppressWarnings("initialization")
 	private AsyncMailer mailer;
 	@Mock
+	@SuppressWarnings("initialization")
 	private InterceptorStack stack;
 
+	@SuppressWarnings("initialization")
 	private Interceptor interceptor;
+	@SuppressWarnings("initialization")
 	private MyController controller;
+	@SuppressWarnings("initialization")
 	private ResourceMethod method;
 
 	@Before
